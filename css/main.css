@@ -47,6 +47,11 @@ body {
 	transition: .5s;
 }
 
+.circle_active {
+	opacity: 0.9;
+	transition: .5s;
+}
+
 .circle_blue {
 	background: rgba(4, 72, 247);
 }
