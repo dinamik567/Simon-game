@@ -1,7 +1,7 @@
 'use strict';
 
 let circles = document.querySelectorAll('.circle'); //This is array of circle; 
-let buttonStart = document.querySelector('button-start'); // This is button to start game;
+let buttonStart = document.querySelector('.button-start'); // This is button to start game;
 let sounds = ['one', 'two', 'three', 'four']; //This is an array of sound names
 let sequenceArray = []; //In this array will record sequence
 
@@ -9,15 +9,28 @@ let sequenceArray = []; //In this array will record sequence
 //This function added the event on elements
 function addEvenetClickOnElements(arr, func) {
 	for (let elem of arr) {
-		elem.addEventListener('click', func.bind(this, elem))
+		elem.addEventListener('click', func.bind(this, elem));
 	}
 }
+
+//Start game
+buttonStart.addEventListener('click', function() {
+	let elem = getRandomElementOnArray(sounds);
+
+	recordElementOnArray(elem, sequenceArray);
+	showSequence(sequenceArray);
+
+});
+
+
+
 
 // This function added sound on elem
 function addSound(elem) {
 	let audio = new Audio(`../sounds/${elem.dataset.number}.mp3`);
 	audio.play();
 }
+
 
 ///This function returns a random element from the given array
 function getRandomElementOnArray(arr) {
@@ -35,14 +48,6 @@ function recordElementOnArray(elem, arr) {
 	arr.push(elem);
 }
 
-function addClassElement(elem, addClass) {
-	elem.classList.add(addClass);
-}
-
-function removeClassElement(elem, removeClass) {
-	elem.classList.remove(removeClass);
-}
-
 //This function showed a sequence
 function showSequence(arr) {
 	let counter = 0;
@@ -57,6 +62,10 @@ function showSequence(arr) {
 			addSound(circle);
 			addClassElement(circle, 'circle_active');
 			previousElement = circle;
+			//This condition performs a delay before executing the function
+			setTimeout(function() {
+					removeClassElement(circle, 'circle_active')
+				}, 500)
 			counter++;
 		} else {
 			clearInterval(timerId)
@@ -64,12 +73,32 @@ function showSequence(arr) {
 	}, 1000);
 }
 
+function addClassElement(elem, addClass) {
+	elem.classList.add(addClass);
+}
+
+function removeClassElement(elem, removeClass) {
+	elem.classList.remove(removeClass);
+}
+
+
 //This function compares two elements
 function comparesElements(elem1, elem2) {
 		return elem1 === elem2;
 }
 
+function checkSequenceClickElements(e) {
+	addEvenetClickOnElements(circles, addSound)
+
+}
+
+checkSequenceClickElements()
 
 
-addEvenetClickOnElements(circles, addSound);
 
+function getAttributeDatasetNumberElement(elem) {
+	return elem.dataset.number;
+}
+
+// let test = getAttributeDatasetNumberElement(circles[0]);
+// console.log(test);
