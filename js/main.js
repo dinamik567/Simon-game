@@ -2,7 +2,7 @@
 
 let circles = document.querySelectorAll('.circle'); //This is array of circle; 
 let buttonStart = document.querySelector('button-start'); // This is button to start game;
-let sounds = ['one', 'two', 'tree', 'four']; //This is an array of sound names
+let sounds = ['one', 'two', 'three', 'four']; //This is an array of sound names
 let sequenceArray = []; //In this array will record sequence
 
 
@@ -43,24 +43,33 @@ function removeClassElement(elem, removeClass) {
 	elem.classList.remove(removeClass);
 }
 
+//This function showed a sequence
 function showSequence(arr) {
 	let counter = 0;
-		do {
+	let previousElement = null;
+	let timerId = setInterval(function() {
+		if (counter < arr.length) {
+			//check if the previous element exists
+			if(previousElement !== null) removeClassElement(previousElement, 'circle_active');
+			//create an element
 			let circle = document.querySelector(`[data-number="${arr[counter]}"]`);
-			setInterval(function() {
-				addSound(circle);
-				addClassElement(circle, 'circle_active');
-			}, 1000)
 
+			addSound(circle);
+			addClassElement(circle, 'circle_active');
+			previousElement = circle;
 			counter++;
-			removeClassElement(circle, 'circle_active');
-		} while (counter <= arr.length - 1);
+		} else {
+			clearInterval(timerId)
+		}
+	}, 1000);
+}
+
+//This function compares two elements
+function comparesElements(elem1, elem2) {
+		return elem1 === elem2;
 }
 
 
-
-
-showSequence(sounds);
 
 addEvenetClickOnElements(circles, addSound);
 
