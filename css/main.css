@@ -45,6 +45,7 @@ body {
 .circle:hover {
 	opacity: 0.9;
 	transition: .5s;
+	cursor: pointer;
 }
 
 .circle_active {

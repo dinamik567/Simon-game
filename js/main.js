@@ -4,7 +4,7 @@ let circles = document.querySelectorAll('.circle'); //This is array of circle;
 let buttonStart = document.querySelector('.button-start'); // This is button to start game;
 let sounds = ['one', 'two', 'three', 'four']; //This is an array of sound names
 let sequenceArray = []; //In this array will record sequence
-
+let streak = document.querySelector('.streak'); //This variable displays the vin streak
 
 //This function added the event on elements
 function addEvenetClickOnElements(arr, func) {
@@ -14,14 +14,49 @@ function addEvenetClickOnElements(arr, func) {
 }
 
 //Start game
-buttonStart.addEventListener('click', function() {
+buttonStart.addEventListener('click', playGame);
+
+function playGame() {
 	let elem = getRandomElementOnArray(sounds);
 
 	recordElementOnArray(elem, sequenceArray);
 	showSequence(sequenceArray);
+	checkTheEnteredSequence(playGame);
+	// Здесь функция которая проверяет введенную последовательность
+}
 
-});
+function checkTheEnteredSequence(func) {
+	let arr = cloneArray(sequenceArray);
+	console.log(arr)
+	circles.forEach(elem => {
+		elem.addEventListener('click', function() {
+			let attributeElem = getAttributeDatasetNumberElement(elem);
+			if (comparesElements(attributeElem, arr[0])) {
+				arr.shift(arr[0]);
+				console.log(arr)
+				if (arr.length < 1) {
+					streak.innerHTML =  streak.innerHTML.slice(0, -1)
+					 + (Number(streak.innerHTML[streak.innerHTML.length - 1]) + 1);
+					func();
+				}
+			} else {
+				sequenceArray = [];
+				console.log('game over');
+			}
+		});
+	});
+}
 
+
+
+
+
+//This function clone array
+function cloneArray(arr) {
+	let result = [];
+	arr.forEach(elem => result.push(elem));
+	return result;
+}
 
 
 
@@ -73,6 +108,7 @@ function showSequence(arr) {
 	}, 1000);
 }
 
+
 function addClassElement(elem, addClass) {
 	elem.classList.add(addClass);
 }
@@ -87,18 +123,8 @@ function comparesElements(elem1, elem2) {
 		return elem1 === elem2;
 }
 
-function checkSequenceClickElements(e) {
-	addEvenetClickOnElements(circles, addSound)
-
-}
-
-checkSequenceClickElements()
-
-
 
 function getAttributeDatasetNumberElement(elem) {
 	return elem.dataset.number;
 }
 
-// let test = getAttributeDatasetNumberElement(circles[0]);
-// console.log(test);
