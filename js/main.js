@@ -5,6 +5,7 @@ let buttonStart = document.querySelector('.button-start'); // This is button to 
 let sounds = ['one', 'two', 'three', 'four']; //This is an array of sound names
 let sequenceArray = []; //In this array will record sequence
 let streak = document.querySelector('.streak'); //This variable displays the vin streak
+let newArray;
 
 //This function added the event on elements
 function addEvenetClickOnElements(arr, func) {
@@ -13,49 +14,56 @@ function addEvenetClickOnElements(arr, func) {
 	}
 }
 
-//Start game
+
 buttonStart.addEventListener('click', playGame);
 
 function playGame() {
+	buttonStart.innerHTML = 'Начать заного';
+	
 	let elem = getRandomElementOnArray(sounds);
-
 	recordElementOnArray(elem, sequenceArray);
 	showSequence(sequenceArray);
 	checkTheEnteredSequence(playGame);
-	// Здесь функция которая проверяет введенную последовательность
+	buttonStart.removeEventListener('click', playGame);
 }
+
+
 
 function checkTheEnteredSequence(func) {
 	let arr = cloneArray(sequenceArray);
-	console.log(arr)
-	circles.forEach(elem => {
-		elem.addEventListener('click', function() {
-			let attributeElem = getAttributeDatasetNumberElement(elem);
-			if (comparesElements(attributeElem, arr[0])) {
-				arr.shift(arr[0]);
-				console.log(arr)
-				if (arr.length < 1) {
-					streak.innerHTML =  streak.innerHTML.slice(0, -1)
-					 + (Number(streak.innerHTML[streak.innerHTML.length - 1]) + 1);
-					func();
-				}
-			} else {
-				sequenceArray = [];
-				console.log('game over');
-			}
-		});
-	});
-}
 
+
+	circles.forEach(elem => elem.addEventListener('click', function checkElement(e) {
+		let attributeElement = getAttributeDatasetNumberElement(e.target);
+		let rightElement = arr.shift();
+
+		switch (attributeElement === rightElement) {
+			case true:
+				addSound(elem)
+				if (arr.length <= 0) {
+					streak.innerHTML = streak.innerHTML.slice(0, -1) + (Number(streak.innerHTML[streak.innerHTML.length - 1])  + 1);
+					elem.removeEventListener('click', checkElement);
+					func()
+				}
+			break;
+			case false:
+				sequenceArray = [];
+				streak.innerHTM = streak.innerHTML = 'streak:  0';
+				elem.removeEventListener('click', checkElement);
+				buttonStart.addEventListener('click', playGame);
+			break;
+		}
+	}));
+
+
+}
 
 
 
 
 //This function clone array
 function cloneArray(arr) {
-	let result = [];
-	arr.forEach(elem => result.push(elem));
-	return result;
+	return arr.map(elem => elem);
 }
 
 
@@ -117,11 +125,6 @@ function removeClassElement(elem, removeClass) {
 	elem.classList.remove(removeClass);
 }
 
-
-//This function compares two elements
-function comparesElements(elem1, elem2) {
-		return elem1 === elem2;
-}
 
 
 function getAttributeDatasetNumberElement(elem) {
