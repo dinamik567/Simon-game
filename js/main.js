@@ -19,7 +19,8 @@ buttonStart.addEventListener('click', playGame);
 
 function playGame() {
 	buttonStart.innerHTML = 'Начать заного';
-	
+
+
 	let elem = getRandomElementOnArray(sounds);
 	recordElementOnArray(elem, sequenceArray);
 	showSequence(sequenceArray);
@@ -37,18 +38,20 @@ function checkTheEnteredSequence(func) {
 		let attributeElement = getAttributeDatasetNumberElement(e.target);
 		let rightElement = arr.shift();
 
+		console.log(arr)
 		switch (attributeElement === rightElement) {
 			case true:
 				addSound(elem)
 				if (arr.length <= 0) {
-					streak.innerHTML = streak.innerHTML.slice(0, -1) + (Number(streak.innerHTML[streak.innerHTML.length - 1])  + 1);
+					streak.innerHTML = streak.innerHTML.slice(0, -1) + (Number(streak.innerHTML[streak.innerHTML.length - 1]) + 1);
 					elem.removeEventListener('click', checkElement);
-					func()
+					func();
 				}
 			break;
 			case false:
+				console.log('+')
 				sequenceArray = [];
-				streak.innerHTM = streak.innerHTML = 'streak:  0';
+				streak.innerHTM = streak.innerHTML = 'Streak:  0';
 				elem.removeEventListener('click', checkElement);
 				buttonStart.addEventListener('click', playGame);
 			break;
